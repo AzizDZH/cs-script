@@ -436,7 +436,13 @@ namespace CSScriptLib
 
                 if (this.IsDebug)
                     compilation = compilation.WithOptions(compilation.Options.WithOptimizationLevel(OptimizationLevel.Debug));
-
+                if (!string.IsNullOrEmpty(info?.RootClass) && info?.RootClass != Globals.RootClassName)                
+                {
+                    // Get the assembly identity
+                    AssemblyIdentity originalIdentity = compilation.Assembly.Identity;
+                    compilation =
+                        compilation.WithAssemblyName(info?.RootClass ??originalIdentity.Name);
+                }
                 compilation = compilation.WithOptions(compilation.Options.WithScriptClassName(info?.RootClass ?? Globals.RootClassName)
                                                                          .WithOutputKind(OutputKind.DynamicallyLinkedLibrary));
 
